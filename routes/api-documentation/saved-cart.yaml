@@ -1,0 +1,79 @@
+paths:
+  /saved-cart:
+    get:
+      tags: [saved-cart]
+      summary: get cart from previous session
+      responses:
+        200:
+          description: Request successful. Returned cart from previous session containing list of grocery items.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                  statusCode:
+                    type: number
+                    example: 200
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      example:
+                        _id: 6085b7bb7d1d4b2a103467e9
+                        name: Milk
+                        brand: Dairyland
+                        category: Dairy and Eggs
+                        categoryId: 6085b7bb7d1d4b2a103467f4
+                        price: { value: 2.99, currency: CAD }
+                        volume: { value: 1000, unit: ml }
+                        stock: 20
+                        status: Active
+        404:
+          description: Not Found.
+        500:
+          description: Internal Server Error.
+
+    post:
+      tags: [saved-cart]
+      summary: save a cart
+      requestBody:
+        description: Provide list of grocery items by _id to be saved.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cart:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+      responses:
+        200:
+          description: Cart successfully saved into session.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                  statusCode:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: Cart saved to session
+        400:
+          description: Bad request.
+        404:
+          description: Not Found.
+        500:
+          description: Internal Server Error.

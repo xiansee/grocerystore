@@ -1,0 +1,9 @@
+tags:
+  - name: grocery
+    description: access available store items
+  - name: order
+    description: details on placed orders
+  - name: saved-cart
+    description: access cart from previous session
+  - name: user
+    description: manage users

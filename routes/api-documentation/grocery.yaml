@@ -1,0 +1,218 @@
+paths:
+  /grocery:
+    get:
+      tags: [grocery]
+      summary: query grocery items
+      description: Get grocery items by category, name and/or _id. If no parameters are specified, all available grocery items will be returned.
+      parameters:
+        - in: query
+          schema:
+            type: string
+          name: category
+          description: Category name of grocery items
+          example: Dairy and Eggs
+        - in: query
+          schema:
+            type: string
+          name: name
+          description: Name of grocery item
+          example: "Milk"
+        - in: query
+          name: limit
+          schema:
+            type: number
+          description: Maximum number of items to return
+          example: 5
+        - in: query
+          name: _id
+          schema:
+            type: string
+          description: Unique _id of grocery item
+      responses:
+        200:
+          description: Query successful. Grocery items returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "OK"
+                  statusCode:
+                    type: number
+                    example: "200"
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      example:
+                        _id: 6083806a09dd964c709df323
+                        name: Milk
+                        brand: Dairyland
+                        category: Dairy and Eggs
+                        category_id: 6083806a09dd964c709df32e
+                        price:
+                          value: 2.99
+                          currency: CAD
+                        volume:
+                          value: 1000
+                          unit: ml
+                        stock: 20
+                        status: Active
+        400:
+          description: Bad Request
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error
+
+    post:
+      tags: [grocery]
+      summary: create new grocery item
+      requestBody:
+        description: Provide field values defined under schema "grocery" to create a new grocery item.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Yogurt
+                brand:
+                  type: string
+                  example: Activia
+                category:
+                  type: string
+                  example: Dairy and Eggs
+                price:
+                  type: object
+                  properties:
+                    value:
+                      type: number
+                      example: 4.99
+                    currency:
+                      type: string
+                      example: CAD
+                volume:
+                  type: object
+                  properties:
+                    value:
+                      type: number
+                      example: 80
+                    unit:
+                      type: string
+                      example: ml
+                quantity:
+                  type: number
+                  example: 6
+                stock:
+                  type: number
+                  example: 8
+                status:
+                  type: string
+                  example: Active
+      responses:
+        200:
+          description: Grocery item successfully created. Returned new item.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                  statusCode:
+                    type: number
+                    example: 200
+                  data:
+                    type: object
+                    example:
+                      _id: 608628e19298b620042923aa
+                      name: Yogurt
+                      brand: Activia
+                      category: Dairy and Eggs
+                      price: { value: 4.99, currency: CAD }
+                      volume: { value: 80, unit: ml }
+                      quantity: 6
+                      stock: 8
+                      status: Active
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        500:
+          description: Internal Server Error
+
+  /grocery/{_id}:
+    put:
+      tags: [grocery]
+      summary: update grocery item
+      parameters:
+        - in: path
+          schema:
+            type: string
+          name: _id
+          description: Unique _id of grocery item
+          required: true
+      requestBody:
+        description: Provide field values defined under schema "grocery" to update grocery item.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                stock:
+                  type: number
+                  example: 3
+                price:
+                  type: object
+                  properties:
+                    value:
+                      type: number
+                      example: 4.19
+                    currency:
+                      type: string
+                      example: CAD
+      responses:
+        200:
+          description: Grocery successfully updated. Returned grocery document.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                  statusCode:
+                    type: number
+                    example: 200
+                  data:
+                    type: object
+                    example:
+                      _id: 608628e19298b620042923aa
+                      name: Yogurt
+                      brand: Activia
+                      category: Dairy and Eggs
+                      price: { value: 4.19, currency: CAD }
+                      volume: { value: 80, unit: ml }
+                      quantity: 6
+                      stock: 3
+                      status: Active
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error

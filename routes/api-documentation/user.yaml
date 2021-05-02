@@ -1,0 +1,262 @@
+paths:
+  /user/register:
+    post:
+      tags: [user]
+      summary: register user
+      requestBody:
+        description: "Provide email, password and first name of user to be registered. Optional info include: last name, contact number, postal code."
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  example: John
+                email:
+                  type: string
+                  example: john.smith@email.com
+                password:
+                  type: string
+                  example: johnsmith123
+      responses:
+        200:
+          description: User successfully registered. Redirected to login page with login credentials and returned user document.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                  statusCode:
+                    type: number
+                    example: 200
+                  data:
+                    type: object
+                    example:
+                      orders: []
+                      _id: 6085e2753f23086054c6944f
+                      firstName: John
+                      email: john.smith@email.com
+                      type: Standard
+        400:
+          description: Bad Request
+        409:
+          description: Conflict
+        500:
+          description: Internal Server Error.
+
+  /user/login:
+    post:
+      tags: [user]
+      summary: log in user
+      requestBody:
+        description: 'Provide email and password of user to be logged in. For non-administrator credentials, use { "email": "jane.doe@gmail.com", "password": "#cutesquirrel"}'
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: admin@grocerystore.com
+                password:
+                  type: string
+                  example: "storeboss711"
+      responses:
+        200:
+          description: User successfully logged in. Returned user document.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                  statusCode:
+                    type: number
+                    example: 200
+                  data:
+                    type: object
+                    example:
+                      orders: [{ _id: 6085cc339a6b3c101ce46f96 }]
+                      _id: 6085b7bb7d1d4b2a103467fa
+                      firstName: Jane
+                      lastname: Doe
+                      email: jane.doe@gmail.com
+                      contactNumber: +14161234567
+                      postalCode: D1E 2F3
+                      type: Standard
+        400:
+          description: Bad Request.
+        401:
+          description: Unauthorized.
+        500:
+          description: Internal Server Error.
+
+  /user/logout:
+    get:
+      tags: [user]
+      summary: log out user
+      responses:
+        200:
+          description: User successfully logged out.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                  statusCode:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: User jane.doe@gmail.com has been logged out.
+        400:
+          description: Bad Request.
+        500:
+          description: Internal Server Error.
+
+  /user/{_id}:
+    get:
+      tags: [user]
+      summary: get user's info
+      parameters:
+        - in: path
+          schema:
+            type: string
+          name: _id
+          description: Unique _id of user
+          required: true
+      responses:
+        200:
+          description: Request successful. Returned user info.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                  statusCode:
+                    type: number
+                    example: 200
+                  data:
+                    type: object
+                    example:
+                      orders: [{ _id: 6085cc339a6b3c101ce46f96 }]
+                      _id: 6085b7bb7d1d4b2a103467fa
+                      firstName: Jane
+                      lastname: Doe
+                      email: jane.doe@gmail.com
+                      contactNumber: +14161234567
+                      postalCode: D1E 2F3
+                      type: Standard
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        500:
+          description: Internal Server Error
+
+    put:
+      tags: [user]
+      summary: update user
+      parameters:
+        - in: path
+          schema:
+            type: string
+          name: _id
+          description: Unique _id of user
+          required: true
+      requestBody:
+        description: Provide field values defined under schema "user" to update user.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  example: John
+                email:
+                  type: string
+                  example: john.smith@email.com
+                password:
+                  type: string
+                  example: johnsmith123
+      responses:
+        200:
+          description: User successfully updated. Returned user document.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                  statusCode:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: User john.smith@email.com has been successfully removed.
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error
+
+    delete:
+      tags: [user]
+      summary: remove user
+      parameters:
+        - in: path
+          schema:
+            type: string
+          name: _id
+          description: Unique _id of user
+          required: true
+      responses:
+        200:
+          description: User successfully removed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                  statusCode:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: User john.smith@email.com has been successfully removed.
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error

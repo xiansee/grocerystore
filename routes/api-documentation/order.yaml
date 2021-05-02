@@ -1,0 +1,151 @@
+paths:
+  /order:
+    post:
+      tags: [order]
+      summary: place an order
+      requestBody:
+        description: Provide a list of grocery items by _id for the order.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                order:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+      responses:
+        200:
+          description: Order successfully placed. Order document returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                  statusCode:
+                    type: number
+                    example: 200
+                  data:
+                    type: object
+                    example:
+                      _id: 6085cc339a6b3c101ce46f96
+                      customerId: 6085b7bb7d1d4b2a103467fa
+                      orderDate: 2021-04-25T20:08:19.443Z
+                      groceryItems: [{ _id: 6085b7bb7d1d4b2a103467e9 }]
+                      totalCost: { value: 2.99, currency: CAD }
+                      paymentReceived: false
+                      status: Active
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error
+
+  /order/{_id}:
+    get:
+      tags: [order]
+      summary: get past order by _id
+      parameters:
+        - in: path
+          schema:
+            type: string
+          name: _id
+          description: Unique _id of order
+          required: true
+      responses:
+        200:
+          description: Query successful. Order returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                  statusCode:
+                    type: number
+                    example: 200
+                  data:
+                    type: object
+                    properties:
+                      order:
+                        type: object
+                        example:
+                          _id: 6085cc339a6b3c101ce46f96
+                          customerId: 6085b7bb7d1d4b2a103467fa
+                          orderDate: 2021-04-25T20:08:19.443Z
+                          groceryIds: [{ _id: 6083806a09dd964c709df323 }]
+                          totalCost: { value: 2.99, currency: CAD }
+                          paymentReceived: false
+                          status: Active
+                      groceryItems:
+                        type: array
+                        items:
+                          type: object
+                          example:
+                            _id: 6083806a09dd964c709df323
+                            name: Milk
+                            brand: Dairyland
+                            category: Dairy and Eggs
+                            category_id: 6083806a09dd964c709df32e
+                            price:
+                              value: 2.99
+                              currency: CAD
+                            volume:
+                              value: 1000
+                              unit: ml
+                            stock: 20
+                            status: Active
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error
+
+    delete:
+      tags: [order]
+      summary: cancel order
+      parameters:
+        - in: path
+          schema:
+            type: string
+          name: _id
+          description: Unique _id of order
+          required: true
+      responses:
+        200:
+          description: Order successfully cancelled.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                  statusCode:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: Order 608638dc00eccf290cdd0dbc has been successfully cancelled.
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error
